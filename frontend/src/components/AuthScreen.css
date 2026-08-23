@@ -1,0 +1,407 @@
+/* AuthScreen.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: #f4f7f6;
+  position: relative;
+}
+
+/* LEFT PANEL */
+.auth-left {
+  width: 50%;
+  background: url('https://media.istockphoto.com/id/2177135894/vi/anh/b%C3%AAn-trong-m%E1%BB%99t-trung-t%C3%A2m-%C4%91i%E1%BB%81u-ph%E1%BB%91i-kho-l%C3%A0m-vi%E1%BB%87c.jpg?s=612x612&w=0&k=20&c=wpG3ejikZLlBPnGps4UcKjl2sFKa6lXzf5iFzF8cMN8=') no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+
+.auth-left-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4); /* Lớp phủ đen mờ nhẹ giúp giữ màu gốc của ảnh */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+@keyframes rollingBox {
+  0% {
+    transform: translateX(-150px) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    transform: translateX(-150px) rotate(0deg);
+    opacity: 1;
+  }
+  35% {
+    transform: translateX(0) rotate(360deg);
+  }
+  45% {
+    transform: translateX(0) rotate(360deg) scale(1.25);
+  }
+  50% {
+    transform: translateX(0) rotate(360deg) scale(0.9);
+  }
+  55% {
+    transform: translateX(0) rotate(360deg) scale(1.1);
+  }
+  65% {
+    transform: translateX(0) rotate(360deg) scale(1);
+  }
+  85% {
+    transform: translateX(150px) rotate(720deg);
+    opacity: 1;
+  }
+  90% {
+    transform: translateX(150px) rotate(720deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-150px) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+.brand-logo {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  display: inline-block; /* Cần thiết để transform hoạt động mượt mà */
+  animation: rollingBox 5s ease-in-out infinite;
+}
+
+.brand-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.brand-slogan {
+  font-size: 1.2rem;
+  font-weight: 300;
+  opacity: 0.9;
+}
+
+/* RIGHT PANEL */
+.auth-right {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+  position: relative;
+  overflow: hidden; /* Cắt phần mờ của blob tràn ra ngoài */
+}
+
+/* BACKGROUND BLOBS (Đốm màu) */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 1;
+  animation: floatBlob 12s infinite alternate ease-in-out;
+  opacity: 0.6;
+}
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(59, 130, 246, 0.4); /* Xanh dương / blue-500 */
+  top: -100px;
+  left: -100px;
+}
+.blob-2 {
+  width: 350px;
+  height: 350px;
+  background: rgba(168, 85, 247, 0.3); /* Tím / purple-500 */
+  bottom: -50px;
+  right: -50px;
+  animation-duration: 15s;
+  animation-delay: -5s;
+}
+
+@keyframes floatBlob {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -50px) scale(1.1); }
+  100% { transform: translate(-30px, 30px) scale(0.9); }
+}
+
+/* KHẮC PHỤC LỖI NỀN XANH CỦA CHROME/EDGE AUTOFILL */
+.auth-form input:-webkit-autofill,
+.auth-form input:-webkit-autofill:hover, 
+.auth-form input:-webkit-autofill:focus, 
+.auth-form input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #37474f !important;
+  background-color: transparent !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* GLASSMORPHISM CARD */
+.auth-form-container {
+  width: 100%;
+  max-width: 480px;
+  padding: 2.5rem;
+  background-color: rgba(255, 255, 255, 0.75); /* Mờ kính */
+  backdrop-filter: blur(24px); /* Hiệu ứng kính */
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6); /* Viền mờ */
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10; /* Nổi lên trên blob */
+}
+
+/* BOUNCING WELCOME TITLE */
+.welcome-title {
+  display: flex;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.welcome-title span {
+  display: inline-block;
+  animation: bounceLetter 2s infinite;
+}
+
+@keyframes bounceLetter {
+  0%, 20%, 100% { transform: translateY(0); }
+  10% { transform: translateY(-8px); }
+}
+
+/* TABS */
+.auth-tabs {
+  display: flex;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #90a4ae;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tab-btn:hover {
+  color: #1976d2;
+}
+
+.tab-btn.active {
+  color: #1976d2;
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #1976d2;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+/* FORM ELEMENTS */
+.form-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #455a64;
+  margin-bottom: 0.5rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid #cfd8dc;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #ffffff; /* Đổi về màu trắng tinh */
+  transition: all 0.3s ease;
+  color: #37474f;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #1976d2;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  padding-left: 2.8rem;
+}
+
+.input-with-icon .icon {
+  position: absolute;
+  left: 1rem;
+  font-size: 1.1rem;
+  color: #90a4ae;
+}
+
+.input-with-icon .icon-right {
+  position: absolute;
+  right: 1rem;
+  cursor: pointer;
+  color: #90a4ae;
+  font-size: 1.1rem;
+}
+
+/* Ẩn con mắt mặc định của trình duyệt Edge */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+.input-error {
+  border-color: #e53935 !important;
+  background-color: #ffebee !important;
+}
+
+.error-text {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+
+/* LOGIN OPTIONS */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #607d8b;
+  cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.forgot-password {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.forgot-password:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+/* BUTTON */
+.primary-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.primary-btn:hover {
+  background-color: #1565c0;
+  box-shadow: 0 6px 16px rgba(25, 118, 210, 0.4);
+  transform: translateY(-1px);
+}
+
+.primary-btn:active {
+  transform: translateY(1px);
+}
+
+/* TOAST NOTIFICATION */
+.toast-notification {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  animation: slideIn 0.3s ease-out forwards;
+  z-index: 1000;
+}
+
+.toast-notification.success {
+  background-color: #2e7d32;
+}
+
+.toast-notification.error {
+  background-color: #d32f2f;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+  .auth-left, .auth-right {
+    width: 100%;
+  }
+  .auth-left {
+    height: 30vh;
+  }
+  .auth-right {
+    height: 70vh;
+  }
+}
+
