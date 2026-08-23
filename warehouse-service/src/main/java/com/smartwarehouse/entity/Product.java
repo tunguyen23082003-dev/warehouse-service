@@ -34,17 +34,14 @@ public class Product {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-    @Column(name = "unit", length = 30)
+    @Column(name = "unit", length = 20)
     private String unit;
 
-    @Column(name = "min_threshold")
-    private Integer minThreshold;
+    @Column(name = "price", precision = 12, scale = 2)
+    private BigDecimal price;
 
-    @Column(name = "base_price", precision = 15, scale = 2)
-    private BigDecimal basePrice;
-
-    @Column(name = "status", length = 20)
-    private String status;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
