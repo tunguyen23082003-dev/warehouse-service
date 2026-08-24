@@ -22,8 +22,14 @@ public class StockOrder {
     @Column(name = "order_code", nullable = false, unique = true, length = 50)
     private String orderCode;
 
+    public enum OrderType {
+        IMPORT,
+        EXPORT
+    }
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "order_type", nullable = false, length = 20)
-    private String orderType;
+    private OrderType orderType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
@@ -33,8 +39,16 @@ public class StockOrder {
     @JoinColumn(name = "created_by")
     private User createdBy;
 
+    public enum OrderStatus {
+        PENDING,
+        APPROVED,
+        COMPLETED,
+        CANCELLED
+    }
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20)
-    private String status;
+    private OrderStatus status;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;

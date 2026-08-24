@@ -25,7 +25,7 @@ public class Supplier {
     @Column(name = "supplier_name", nullable = false, length = 150)
     private String supplierName;
 
-    @Column(name = "email", length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
     @Column(name = "phone", length = 20)

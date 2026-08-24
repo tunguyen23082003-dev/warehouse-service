@@ -31,15 +31,26 @@ public class User {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "phone", length = 20)
+    @Column(name = "phone", unique = true, length = 20)
     private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+
+    public enum UserStatus {
+        ACTIVE,
+        INACTIVE,
+        BLOCKED
+    }
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20)
-    private String status;
+    private UserStatus status;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
