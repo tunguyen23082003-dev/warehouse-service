@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './AuthScreen.css';
 
-const AuthScreen = () => {
+const AuthScreen = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState('login'); // 'login' or 'register'
   const [showPassword, setShowPassword] = useState(false);
   
@@ -106,6 +106,14 @@ const AuthScreen = () => {
 
       {/* Right Panel: Form Area */}
       <div className="auth-right">
+        <button 
+          onClick={onBack}
+          style={{ position: 'absolute', top: '2rem', right: '2rem', zIndex: 50, padding: '8px 16px', borderRadius: '20px', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer', fontWeight: 'bold', transition: 'background 0.3s' }}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+        >
+          ✕ Đóng
+        </button>
         {/* Background Blobs for Glassmorphism effect */}
         <div className="blob blob-1"></div>
         <div className="blob blob-2"></div>
