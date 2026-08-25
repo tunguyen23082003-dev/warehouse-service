@@ -1,12 +1,15 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Warehouse, Tags, BarChart3, Bell, Search, Box } from 'lucide-react';
+import { LayoutDashboard, Users, Warehouse, Tags, BarChart3, Bell, Search, Box, LogOut } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import './AdminLayout.css';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
   const handleLogout = () => {
+    logout();
     navigate('/auth');
   };
 
@@ -61,14 +64,14 @@ const AdminLayout = () => {
             <Bell size={20} className="topbar-icon" />
             
             <div className="user-profile">
-              <div className="avatar">AD</div>
+              <div className="avatar">{user?.fullName?.charAt(0) || 'A'}</div>
               <div className="user-info">
-                <span className="user-name">Admin</span>
+                <span className="user-name">{user?.fullName || 'Admin'}</span>
                 <span className="user-role">Quản trị viên</span>
               </div>
             </div>
             
-            <button className="logout-btn" onClick={handleLogout}>Đăng xuất</button>
+            <button className="logout-btn" onClick={handleLogout} title="Đăng xuất"><LogOut size={20} /></button>
           </div>
         </header>
 

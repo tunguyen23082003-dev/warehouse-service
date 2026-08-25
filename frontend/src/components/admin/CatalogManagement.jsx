@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
-
-const categories = [
-  { id: 1, name: 'Điện tử', description: 'Các thiết bị điện tử, linh kiện' },
-  { id: 2, name: 'Gia dụng', description: 'Đồ dùng gia đình' },
-  { id: 3, name: 'Thực phẩm', description: 'Đồ ăn, thức uống đóng gói' },
-];
-
-const suppliers = [
-  { id: 1, code: 'SUP-01', name: 'Công ty TNHH Samsung', email: 'contact@samsung.vn', phone: '0283123456' },
-  { id: 2, code: 'SUP-02', name: 'Nhà phân phối Đại Phát', email: 'daiphat@gmail.com', phone: '0909123456' },
-];
+import React, { useState, useEffect } from 'react';
+import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
+import categoryApi from '../../services/categoryApi';
+import supplierApi from '../../services/supplierApi';
 
 const CatalogManagement = () => {
   const [activeTab, setActiveTab] = useState('category');
+  const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (activeTab === 'category') {
+          const res = await categoryApi.getAll();
+          if (res.data.success) setCategories(res.data.data);
+        } else {
+          const res = await supplierApi.getAll();
+          if (res.data.success) setSuppliers(res.data.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch catalog data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [activeTab]);
 
   return (
     <div>
@@ -41,11 +55,14 @@ const CatalogManagement = () => {
 
       <div className="admin-card">
         <div className="admin-table-container">
-          {activeTab === 'category' ? (
+          {loading ? (
+            <div className="flex justify-center p-8"><Loader2 className="animate-spin text-cyan-500" size={32} /></div>
+          ) : activeTab === 'category' ? (
             <table className="admin-table">
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Mã loại</th>
                   <th>Tên loại hàng</th>
                   <th>Mô tả</th>
                   <th>Hành động</th>
@@ -53,9 +70,10 @@ const CatalogManagement = () => {
               </thead>
               <tbody>
                 {categories.map(cat => (
-                  <tr key={cat.id}>
-                    <td className="text-slate-400">#{cat.id}</td>
-                    <td className="font-medium text-white">{cat.name}</td>
+                  <tr key={cat.categoryId}>
+                    <td className="text-slate-400">#{cat.categoryId}</td>
+                    <td className="font-mono text-cyan-400">{cat.categoryCode}</td>
+                    <td className="font-medium text-white">{cat.categoryName}</td>
                     <td className="text-slate-300">{cat.description}</td>
                     <td>
                       <div className="flex gap-3">
@@ -80,9 +98,9 @@ const CatalogManagement = () => {
               </thead>
               <tbody>
                 {suppliers.map(sup => (
-                  <tr key={sup.id}>
-                    <td><span className="bg-slate-800 text-cyan-400 px-2 py-1 rounded text-xs font-mono">{sup.code}</span></td>
-                    <td className="font-medium text-white">{sup.name}</td>
+                  <tr key={sup.supplierId}>
+                    <td><span className="bg-slate-800 text-cyan-400 px-2 py-1 rounded text-xs font-mono">{sup.supplierCode}</span></td>
+                    <td className="font-medium text-white">{sup.supplierName}</td>
                     <td className="text-slate-300">{sup.email}</td>
                     <td className="text-slate-300">{sup.phone}</td>
                     <td>

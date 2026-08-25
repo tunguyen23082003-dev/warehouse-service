@@ -39,7 +39,7 @@ public class User {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "warehouse_id")
+    @JoinColumn(name = "warehouse_id", nullable = true)
     private Warehouse warehouse;
 
     public enum UserStatus {

@@ -15,6 +15,8 @@ public class ProductDTO {
     private Integer categoryId;
     private Long supplierId;
     private String unit;
-    private BigDecimal price;
+    private BigDecimal basePrice;
+    private Integer minThreshold;
+    private String status;
     private String description;
 }

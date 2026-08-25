@@ -1,16 +1,36 @@
-import React from 'react';
-import { Package, Users, AlertTriangle, Warehouse } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Package, Users, AlertTriangle, Warehouse, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { name: 'Kho Trung Tâm', quantity: 4000 },
-  { name: 'Kho Miền Nam', quantity: 3000 },
-  { name: 'Kho Miền Bắc', quantity: 2000 },
-  { name: 'Kho Lạnh', quantity: 2780 },
-  { name: 'Kho Hóa Chất', quantity: 1890 },
-];
+import dashboardApi from '../../services/dashboardApi';
 
 const Dashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await dashboardApi.getOverview();
+        if (response.data.success) {
+          setStats(response.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="animate-spin text-cyan-500" size={48} />
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -27,7 +47,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-slate-400 text-sm font-medium">Tổng số kho</p>
-            <h3 className="text-2xl font-bold text-white">5</h3>
+            <h3 className="text-2xl font-bold text-white">{stats?.totalWarehouses || 0}</h3>
           </div>
         </div>
 
@@ -38,7 +58,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-slate-400 text-sm font-medium">Tổng sản phẩm</p>
-            <h3 className="text-2xl font-bold text-white">12,450</h3>
+            <h3 className="text-2xl font-bold text-white">{stats?.totalProducts || 0}</h3>
           </div>
         </div>
 
@@ -49,7 +69,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-slate-400 text-sm font-medium">Người dùng</p>
-            <h3 className="text-2xl font-bold text-white">128</h3>
+            <h3 className="text-2xl font-bold text-white">{stats?.totalUsers || 0}</h3>
           </div>
         </div>
 
@@ -60,7 +80,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-slate-400 text-sm font-medium">Cảnh báo tồn kho</p>
-            <h3 className="text-2xl font-bold text-white">14</h3>
+            <h3 className="text-2xl font-bold text-white">{stats?.totalAlerts || 0}</h3>
           </div>
         </div>
 
@@ -72,7 +92,7 @@ const Dashboard = () => {
         <div style={{ width: '100%', height: 400 }}>
           <ResponsiveContainer>
             <BarChart
-              data={data}
+              data={stats?.chartData || []}
               margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />

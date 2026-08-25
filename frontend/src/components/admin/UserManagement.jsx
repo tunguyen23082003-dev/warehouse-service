@@ -1,14 +1,76 @@
-import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, X } from 'lucide-react';
-
-const initialUsers = [
-  { id: 1, name: 'Nguyễn Văn A', email: 'admin@gmail.com', role: 'ADMIN', warehouse: 'Tất cả', status: 'ACTIVE' },
-  { id: 2, name: 'Trần Thủ Kho', email: 'warehousekeeper@gmail.com', role: 'WAREHOUSE_KEEPER', warehouse: 'Kho Trung Tâm', status: 'ACTIVE' },
-  { id: 3, name: 'Lê Nhân Viên', email: 'warehousestaff@gmail.com', role: 'WAREHOUSE_STAFF', warehouse: 'Kho Miền Nam', status: 'INACTIVE' },
-];
+import React, { useState, useEffect } from 'react';
+import { Plus, Edit2, Trash2, X, Loader2 } from 'lucide-react';
+import userApi from '../../services/userApi';
+import warehouseApi from '../../services/warehouseApi';
 
 const UserManagement = () => {
+  const [users, setUsers] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'WAREHOUSE_STAFF',
+    warehouseId: '',
+    status: 'ACTIVE'
+  });
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [usersRes, whRes] = await Promise.all([
+        userApi.getAll(),
+        warehouseApi.getAll()
+      ]);
+      if (usersRes.data.success) setUsers(usersRes.data.data);
+      if (whRes.data.success) setWarehouses(whRes.data.data);
+    } catch (error) {
+      console.error("Failed to load user management data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = { ...formData };
+      if (payload.role === 'ADMIN') {
+        payload.warehouseId = null; 
+      } else if (!payload.warehouseId) {
+        alert("Vui lòng chọn kho cho nhân viên.");
+        return;
+      }
+      
+      const response = await userApi.create(payload);
+      if (response.data.success) {
+        setUsers([...users, response.data.data]);
+        setIsModalOpen(false);
+        setFormData({ name: '', email: '', password: '', role: 'WAREHOUSE_STAFF', warehouseId: '', status: 'ACTIVE' });
+      }
+    } catch (error) {
+      console.error("Failed to create user", error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="animate-spin text-cyan-500" size={48} />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -33,14 +95,14 @@ const UserManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {initialUsers.map(user => (
-                <tr key={user.id}>
-                  <td className="font-medium text-white">{user.name}</td>
+              {users.map(user => (
+                <tr key={user.userId}>
+                  <td className="font-medium text-white">{user.fullName || user.username}</td>
                   <td className="text-slate-400">{user.email}</td>
                   <td>
-                    <span className="text-cyan-400 font-semibold">{user.role}</span>
+                    <span className="text-cyan-400 font-semibold">{user.role?.roleName || 'N/A'}</span>
                   </td>
-                  <td className="text-slate-300">{user.warehouse}</td>
+                  <td className="text-slate-300">{user.warehouse?.warehouseName || 'Tất cả'}</td>
                   <td>
                     <span className={`badge ${user.status === 'ACTIVE' ? 'badge-active' : 'badge-inactive'}`}>
                       {user.status === 'ACTIVE' ? 'Hoạt động' : 'Đã khóa'}
@@ -70,32 +132,39 @@ const UserManagement = () => {
               </button>
             </div>
             
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); }}>
+            <form className="space-y-4" onSubmit={handleSubmit} autoComplete="off">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">Họ và tên</label>
-                <input type="text" className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500" required />
+                <label className="block text-sm font-medium text-slate-300 mb-1">Họ và tên / Username</label>
+                <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500" required autoComplete="new-password" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
-                <input type="email" className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500" required />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500" required autoComplete="new-password" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Mật khẩu</label>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500" required autoComplete="new-password" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Vai trò</label>
-                <select className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500">
+                <select name="role" value={formData.role} onChange={handleChange} className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500">
                   <option value="ADMIN">Quản trị viên (ADMIN)</option>
-                  <option value="WAREHOUSE_KEEPER">Thủ kho (WAREHOUSE_KEEPER)</option>
-                  <option value="WAREHOUSE_STAFF">Nhân viên kho (WAREHOUSE_STAFF)</option>
+                  <option value="THU_KHO">Thủ kho (THU_KHO)</option>
+                  <option value="NHAN_VIEN_KHO">Nhân viên kho (NHAN_VIEN_KHO)</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">Gán Kho phụ trách</label>
-                <select className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500">
-                  <option value="">-- Chọn kho --</option>
-                  <option value="1">Kho Trung Tâm</option>
-                  <option value="2">Kho Miền Nam</option>
-                  <option value="3">Kho Miền Bắc</option>
-                </select>
-              </div>
+              
+              {formData.role !== 'ADMIN' && (
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Gán Kho phụ trách</label>
+                  <select name="warehouseId" value={formData.warehouseId} onChange={handleChange} className="w-full bg-[#050a14] border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500">
+                    <option value="">-- Chọn kho --</option>
+                    {warehouses.map(wh => (
+                      <option key={wh.warehouseId} value={wh.warehouseId}>{wh.warehouseName}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
               
               <div className="pt-4 flex justify-end gap-3">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-slate-300 hover:text-white transition">Hủy</button>
@@ -110,4 +179,3 @@ const UserManagement = () => {
 };
 
 export default UserManagement;
-
