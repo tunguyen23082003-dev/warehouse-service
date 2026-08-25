@@ -77,5 +77,38 @@ public class DataSeeder implements CommandLineRunner {
             userRepository.save(admin);
             System.out.println("Updated admin user password to: 123456");
         }
+
+        // Seed manager user
+        com.smartwarehouse.entity.User manager = userRepository.findByUsername("manager1@warehouse.com").orElse(null);
+        if (manager == null) {
+            try {
+                List<com.smartwarehouse.entity.User> allUsers = userRepository.findAll();
+                for (com.smartwarehouse.entity.User u : allUsers) {
+                    if ("manager1@warehouse.com".equals(u.getEmail()) || "manager1@warehouse.com".equals(u.getUsername())) {
+                        u.setPassword(passwordEncoder.encode("123456"));
+                        userRepository.save(u);
+                        manager = u;
+                        break;
+                    }
+                }
+            } catch (Exception e) {}
+
+            if (manager == null) {
+                Role managerRole = roleRepository.findByRoleName("THU_KHO").orElseThrow();
+                manager = com.smartwarehouse.entity.User.builder()
+                        .username("manager1@warehouse.com")
+                        .email("manager1@warehouse.com")
+                        .password(passwordEncoder.encode("123456"))
+                        .fullName("Manager 1")
+                        .status(com.smartwarehouse.entity.User.UserStatus.ACTIVE)
+                        .role(managerRole)
+                        .build();
+                userRepository.save(manager);
+                System.out.println("Seeded manager user: manager1@warehouse.com / 123456");
+            }
+        } else {
+            manager.setPassword(passwordEncoder.encode("123456"));
+            userRepository.save(manager);
+        }
     }
 }
