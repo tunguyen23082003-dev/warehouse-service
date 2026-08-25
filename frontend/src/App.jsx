@@ -53,7 +53,6 @@ function App() {
                   <Route path="dashboard" element={<ManagerDashboard />} />
                   <Route path="inventory" element={<ManagerInventory />} />
                   <Route path="orders/pending" element={<ManagerPendingOrders />} />
-                  <Route path="products" element={<CatalogManagement />} />
                   <Route path="alerts" element={<ManagerAlerts />} />
                 </Route>
               </Route>

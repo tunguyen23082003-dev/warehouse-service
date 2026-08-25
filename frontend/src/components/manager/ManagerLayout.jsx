@@ -35,10 +35,6 @@ const ManagerLayout = () => {
             <FileText size={20} />
             <span>Phiếu chờ duyệt</span>
           </NavLink>
-          <NavLink to="/manager/products" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
-            <Package size={20} />
-            <span>Sản phẩm</span>
-          </NavLink>
           <NavLink to="/manager/alerts" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
             <AlertTriangle size={20} />
             <span>Cảnh báo</span>
