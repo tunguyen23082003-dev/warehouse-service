@@ -38,7 +38,7 @@ public class Product {
     private String unit;
 
     @Column(name = "base_price", precision = 12, scale = 2)
-    private BigDecimal price;
+    private BigDecimal basePrice;
     
     @Column(name = "min_threshold", nullable = false)
     private Integer minThreshold;

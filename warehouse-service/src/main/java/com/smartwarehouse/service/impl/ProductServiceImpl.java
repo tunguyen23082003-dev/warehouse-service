@@ -58,7 +58,9 @@ public class ProductServiceImpl implements ProductService {
                 .category(category)
                 .supplier(supplier)
                 .unit(productDTO.getUnit())
-                .price(productDTO.getPrice())
+                .basePrice(productDTO.getBasePrice())
+                .minThreshold(productDTO.getMinThreshold() != null ? productDTO.getMinThreshold() : 0)
+                .status(productDTO.getStatus() != null ? Product.ProductStatus.valueOf(productDTO.getStatus()) : Product.ProductStatus.ACTIVE)
                 .description(productDTO.getDescription())
                 .build();
 
@@ -83,7 +85,13 @@ public class ProductServiceImpl implements ProductService {
 
         existingProduct.setProductName(productDTO.getProductName());
         existingProduct.setUnit(productDTO.getUnit());
-        existingProduct.setPrice(productDTO.getPrice());
+        existingProduct.setBasePrice(productDTO.getBasePrice());
+        if (productDTO.getMinThreshold() != null) {
+            existingProduct.setMinThreshold(productDTO.getMinThreshold());
+        }
+        if (productDTO.getStatus() != null) {
+            existingProduct.setStatus(Product.ProductStatus.valueOf(productDTO.getStatus()));
+        }
         existingProduct.setDescription(productDTO.getDescription());
 
         return productRepository.save(existingProduct);

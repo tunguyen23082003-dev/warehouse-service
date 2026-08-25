@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import authApi from '../services/authApi';
 import './AuthScreen.css';
 
 const AuthScreen = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [activeTab, setActiveTab] = useState('login'); // 'login' or 'register'
   const [showPassword, setShowPassword] = useState(false);
   
@@ -63,27 +66,58 @@ const AuthScreen = () => {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Check for existing errors
     if (errors.email || errors.password || (activeTab === 'register' && errors.confirmPassword)) {
       showToast('Vui lòng kiểm tra lại thông tin!', 'error');
       return;
     }
 
-    // Basic empty check
     if (!formData.email || !formData.password) {
       showToast('Vui lòng điền đầy đủ thông tin bắt buộc!', 'error');
       return;
     }
 
-    // Simulate API Call
-    if (activeTab === 'login') {
-      showToast('Đăng nhập thành công! Đang chuyển hướng...', 'success');
-      setTimeout(() => navigate('/admin/dashboard'), 1500);
-    } else {
-      showToast('Đăng ký tài khoản thành công!', 'success');
+    try {
+      if (activeTab === 'login') {
+        const payload = { username: formData.email, password: formData.password };
+        const response = await authApi.login(payload);
+        
+        if (response.data.success) {
+          const { role } = response.data.data;
+          // Use AuthContext to save user and token
+          login(response.data.data);
+          
+          showToast('Đăng nhập thành công! Đang chuyển hướng...', 'success');
+          
+          // Role-based routing
+          setTimeout(() => {
+            if (role === 'ROLE_ADMIN' || role === 'ADMIN') {
+              navigate('/admin/dashboard');
+            } else if (role === 'ROLE_THU_KHO' || role === 'THU_KHO') {
+              navigate('/manager/dashboard');
+            } else {
+              navigate('/staff/dashboard');
+            }
+          }, 1000);
+        }
+      } else {
+        const payload = {
+          email: formData.email,
+          password: formData.password,
+          name: formData.fullName || formData.email.split('@')[0],
+          role: 'NHAN_VIEN_KHO' // Default role for public registration
+        };
+        const response = await authApi.register(payload);
+        if (response.data.success) {
+          showToast('Đăng ký tài khoản thành công! Vui lòng đăng nhập.', 'success');
+          setActiveTab('login');
+        }
+      }
+    } catch (error) {
+      showToast(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
+      console.error(error);
     }
   };
 
