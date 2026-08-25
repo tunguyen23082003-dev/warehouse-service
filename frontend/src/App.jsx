@@ -9,6 +9,11 @@ const LandingPage = React.lazy(() => import('./components/LandingPage'));
 const AuthScreen = React.lazy(() => import('./components/AuthScreen'));
 const AdminLayout = React.lazy(() => import('./components/admin/AdminLayout'));
 const ManagerLayout = React.lazy(() => import('./components/manager/ManagerLayout'));
+const ManagerDashboard = React.lazy(() => import('./components/manager/ManagerDashboard'));
+const ManagerInventory = React.lazy(() => import('./components/manager/ManagerInventory'));
+const ManagerPendingOrders = React.lazy(() => import('./components/manager/ManagerPendingOrders'));
+const ManagerAlerts = React.lazy(() => import('./components/manager/ManagerAlerts'));
+
 const StaffLayout = React.lazy(() => import('./components/staff/StaffLayout'));
 const Dashboard = React.lazy(() => import('./components/admin/Dashboard'));
 const UserManagement = React.lazy(() => import('./components/admin/UserManagement'));
@@ -16,7 +21,7 @@ const WarehouseManagement = React.lazy(() => import('./components/admin/Warehous
 const CatalogManagement = React.lazy(() => import('./components/admin/CatalogManagement'));
 const Reports = React.lazy(() => import('./components/admin/Reports'));
 
-// Placeholder components for Manager and Staff since they don't exist yet
+// Placeholder components for Staff since they don't exist yet
 const Placeholder = ({ title }) => <div className="p-8 text-white"><h2 className="text-2xl font-bold">{title}</h2><p className="text-slate-400 mt-2">Đang xây dựng...</p></div>;
 
 function App() {
@@ -42,19 +47,19 @@ function App() {
               </Route>
 
               {/* MANAGER ROUTES (THU_KHO) */}
-              <Route path="/manager" element={<ProtectedRoute allowedRoles={['THU_KHO']} />}>
+              <Route path="/manager" element={<ProtectedRoute allowedRoles={['THU_KHO', 'MANAGER']} />}>
                 <Route element={<ManagerLayout />}>
                   <Route index element={<Navigate to="dashboard" replace />} />
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="inventory" element={<Placeholder title="Tồn kho" />} />
-                  <Route path="orders/pending" element={<Placeholder title="Phiếu chờ duyệt" />} />
-                  <Route path="products" element={<Placeholder title="Sản phẩm" />} />
-                  <Route path="alerts" element={<Placeholder title="Cảnh báo tồn kho" />} />
+                  <Route path="dashboard" element={<ManagerDashboard />} />
+                  <Route path="inventory" element={<ManagerInventory />} />
+                  <Route path="orders/pending" element={<ManagerPendingOrders />} />
+                  <Route path="products" element={<CatalogManagement />} />
+                  <Route path="alerts" element={<ManagerAlerts />} />
                 </Route>
               </Route>
 
               {/* STAFF ROUTES (NHAN_VIEN_KHO) */}
-              <Route path="/staff" element={<ProtectedRoute allowedRoles={['NHAN_VIEN_KHO']} />}>
+              <Route path="/staff" element={<ProtectedRoute allowedRoles={['NHAN_VIEN_KHO', 'STAFF']} />}>
                 <Route element={<StaffLayout />}>
                   <Route index element={<Navigate to="dashboard" replace />} />
                   <Route path="dashboard" element={<Dashboard />} />

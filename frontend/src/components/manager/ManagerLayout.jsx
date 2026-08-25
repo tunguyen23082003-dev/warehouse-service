@@ -48,11 +48,11 @@ const ManagerLayout = () => {
 
       {/* Main Content */}
       <main className="admin-main">
-        <header className="admin-header">
-          <div className="header-left">
+        <header className="admin-topbar">
+          <div className="topbar-left">
             <span className="text-slate-300 font-medium">Chi nhánh: {user?.warehouseName || 'Không xác định'}</span>
           </div>
-          <div className="header-right">
+          <div className="topbar-right">
             <div className="user-profile">
               <div className="avatar">{user?.fullName?.charAt(0) || 'U'}</div>
               <div className="user-info">
