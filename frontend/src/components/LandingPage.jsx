@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 
-const LandingPage = ({ onLoginClick }) => {
+const LandingPage = () => {
+  const navigate = useNavigate();
   const [showExplore, setShowExplore] = useState(false);
   const exploreRef = useRef(null);
 
@@ -49,7 +51,7 @@ const LandingPage = ({ onLoginClick }) => {
             {/* Auth Buttons */}
             <div className="border-l border-white/20 pl-4 ml-2 flex gap-3">
               <button 
-                onClick={onLoginClick}
+                onClick={() => navigate('/auth')}
                 className="text-base font-medium px-5 py-2.5 rounded-full border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 transition"
               >
                 Đăng ký / Đăng nhập
