@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AuthScreen.css';
 
-const AuthScreen = ({ onBack }) => {
+const AuthScreen = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('login'); // 'login' or 'register'
   const [showPassword, setShowPassword] = useState(false);
   
@@ -78,7 +80,8 @@ const AuthScreen = ({ onBack }) => {
 
     // Simulate API Call
     if (activeTab === 'login') {
-      showToast('Đăng nhập thành công!', 'success');
+      showToast('Đăng nhập thành công! Đang chuyển hướng...', 'success');
+      setTimeout(() => navigate('/admin/dashboard'), 1500);
     } else {
       showToast('Đăng ký tài khoản thành công!', 'success');
     }
@@ -107,7 +110,7 @@ const AuthScreen = ({ onBack }) => {
       {/* Right Panel: Form Area */}
       <div className="auth-right">
         <button 
-          onClick={onBack}
+          onClick={() => navigate('/')}
           style={{ position: 'absolute', top: '2rem', right: '2rem', zIndex: 50, padding: '8px 16px', borderRadius: '20px', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer', fontWeight: 'bold', transition: 'background 0.3s' }}
           onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
           onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}

@@ -37,8 +37,20 @@ public class Product {
     @Column(name = "unit", length = 20)
     private String unit;
 
-    @Column(name = "price", precision = 12, scale = 2)
+    @Column(name = "base_price", precision = 12, scale = 2)
     private BigDecimal price;
+    
+    @Column(name = "min_threshold", nullable = false)
+    private Integer minThreshold;
+
+    public enum ProductStatus {
+        ACTIVE,
+        DISCONTINUED
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private ProductStatus status;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
