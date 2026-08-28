@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Box, FilePlus, FileText, LogOut } from 'lucide-react';
+import { Box, FilePlus, FileText, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../admin/AdminLayout.css'; // Reuse CSS
 
@@ -22,10 +22,6 @@ const StaffLayout = () => {
           <span>Nhân Viên Kho</span>
         </div>
         <nav className="sidebar-nav">
-          <NavLink to="/staff/dashboard" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
-            <LayoutDashboard size={20} />
-            <span>Dashboard</span>
-          </NavLink>
           <NavLink to="/staff/orders/create" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
             <FilePlus size={20} />
             <span>Tạo phiếu xuất/nhập</span>

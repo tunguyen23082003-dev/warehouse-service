@@ -110,5 +110,38 @@ public class DataSeeder implements CommandLineRunner {
             manager.setPassword(passwordEncoder.encode("123456"));
             userRepository.save(manager);
         }
+
+        // Seed staff user
+        com.smartwarehouse.entity.User staff = userRepository.findByUsername("staff1@warehouse.com").orElse(null);
+        if (staff == null) {
+            try {
+                List<com.smartwarehouse.entity.User> allUsers = userRepository.findAll();
+                for (com.smartwarehouse.entity.User u : allUsers) {
+                    if ("staff1@warehouse.com".equals(u.getEmail()) || "staff1@warehouse.com".equals(u.getUsername())) {
+                        u.setPassword(passwordEncoder.encode("123456"));
+                        userRepository.save(u);
+                        staff = u;
+                        break;
+                    }
+                }
+            } catch (Exception e) {}
+
+            if (staff == null) {
+                Role staffRole = roleRepository.findByRoleName("NHAN_VIEN_KHO").orElseThrow();
+                staff = com.smartwarehouse.entity.User.builder()
+                        .username("staff1@warehouse.com")
+                        .email("staff1@warehouse.com")
+                        .password(passwordEncoder.encode("123456"))
+                        .fullName("Staff 1")
+                        .status(com.smartwarehouse.entity.User.UserStatus.ACTIVE)
+                        .role(staffRole)
+                        .build();
+                userRepository.save(staff);
+                System.out.println("Seeded staff user: staff1@warehouse.com / 123456");
+            }
+        } else {
+            staff.setPassword(passwordEncoder.encode("123456"));
+            userRepository.save(staff);
+        }
     }
 }

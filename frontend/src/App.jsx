@@ -15,14 +15,14 @@ const ManagerPendingOrders = React.lazy(() => import('./components/manager/Manag
 const ManagerAlerts = React.lazy(() => import('./components/manager/ManagerAlerts'));
 
 const StaffLayout = React.lazy(() => import('./components/staff/StaffLayout'));
+const CreateOrder = React.lazy(() => import('./components/staff/CreateOrder'));
+const MyOrders = React.lazy(() => import('./components/staff/MyOrders'));
+const StaffInventory = React.lazy(() => import('./components/staff/StaffInventory'));
 const Dashboard = React.lazy(() => import('./components/admin/Dashboard'));
 const UserManagement = React.lazy(() => import('./components/admin/UserManagement'));
 const WarehouseManagement = React.lazy(() => import('./components/admin/WarehouseManagement'));
 const CatalogManagement = React.lazy(() => import('./components/admin/CatalogManagement'));
 const Reports = React.lazy(() => import('./components/admin/Reports'));
-
-// Placeholder components for Staff since they don't exist yet
-const Placeholder = ({ title }) => <div className="p-8 text-white"><h2 className="text-2xl font-bold">{title}</h2><p className="text-slate-400 mt-2">Đang xây dựng...</p></div>;
 
 function App() {
   return (
@@ -53,7 +53,6 @@ function App() {
                   <Route path="dashboard" element={<ManagerDashboard />} />
                   <Route path="inventory" element={<ManagerInventory />} />
                   <Route path="orders/pending" element={<ManagerPendingOrders />} />
-                  <Route path="products" element={<CatalogManagement />} />
                   <Route path="alerts" element={<ManagerAlerts />} />
                 </Route>
               </Route>
@@ -61,11 +60,10 @@ function App() {
               {/* STAFF ROUTES (NHAN_VIEN_KHO) */}
               <Route path="/staff" element={<ProtectedRoute allowedRoles={['NHAN_VIEN_KHO', 'STAFF']} />}>
                 <Route element={<StaffLayout />}>
-                  <Route index element={<Navigate to="dashboard" replace />} />
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="orders/create" element={<Placeholder title="Tạo phiếu xuất/nhập" />} />
-                  <Route path="orders/my" element={<Placeholder title="Phiếu của tôi" />} />
-                  <Route path="inventory" element={<Placeholder title="Tồn kho chi nhánh" />} />
+                  <Route index element={<Navigate to="orders/my" replace />} />
+                  <Route path="orders/create" element={<CreateOrder />} />
+                  <Route path="orders/my" element={<MyOrders />} />
+                  <Route path="inventory" element={<StaffInventory />} />
                 </Route>
               </Route>
             </Routes>

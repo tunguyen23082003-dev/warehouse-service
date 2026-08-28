@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, FileText, AlertTriangle, Box, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, AlertTriangle, Box, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../admin/AdminLayout.css'; // Reuse CSS
 
@@ -34,10 +34,6 @@ const ManagerLayout = () => {
           <NavLink to="/manager/orders/pending" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
             <FileText size={20} />
             <span>Phiếu chờ duyệt</span>
-          </NavLink>
-          <NavLink to="/manager/products" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
-            <Package size={20} />
-            <span>Sản phẩm</span>
           </NavLink>
           <NavLink to="/manager/alerts" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
             <AlertTriangle size={20} />
