@@ -16,7 +16,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
     // If not allowed, redirect to their proper dashboard
     if (userRole === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
     if (userRole === 'THU_KHO' || userRole === 'MANAGER') return <Navigate to="/manager/dashboard" replace />;
-    if (userRole === 'NHAN_VIEN_KHO' || userRole === 'STAFF') return <Navigate to="/staff/dashboard" replace />;
+    if (userRole === 'NHAN_VIEN_KHO' || userRole === 'STAFF') return <Navigate to="/staff/orders/my" replace />;
     return <Navigate to="/auth" replace />;
   }
 

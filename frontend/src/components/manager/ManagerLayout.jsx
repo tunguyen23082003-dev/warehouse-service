@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, FileText, AlertTriangle, Box, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, AlertTriangle, Box, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../admin/AdminLayout.css'; // Reuse CSS
 
